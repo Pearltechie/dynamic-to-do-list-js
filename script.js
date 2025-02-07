@@ -9,13 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add an event listener to addButton that calls addTask when the button is clicked
     addButton.addEventListener('click', () => {
-        addTask(taskInput.value);
+        addTask();
     });
 
     // Add an event listener to taskInput for the ‘keypress’ event to allow tasks to be added by pressing the “Enter” key
     taskInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
-            addTask(taskInput.value);
+            addTask();
         }
     });
 
@@ -26,18 +26,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Create the addTask Function:
-    function addTask(taskText, save = true) {
-        // Retrieve and trim the value from the task input field
-        taskText = taskText.trim();
+
+    // Define a function named addTask. This function will be responsible for adding new tasks to the list.
+    function addTask(taskText = null, save = true) {
+        // Inside addTask, retrieve and trim the value from the task input field. Store this value in a variable named taskText.
+        if (taskText === null) {
+            taskText = taskInput.value.trim();
+        }
 
         // Check if taskText is not empty (“”)
         if (taskText === "") {
+            // If it is empty, use alert to prompt the user to enter a task.
             alert("Please enter a task.");
             return;
         }
 
         // Task Creation and Removal:
 
+        // Within the addTask function, if taskText is not empty:
+        
         // Create a new li element. Set its textContent to taskText.
         const li = document.createElement('li');
         li.textContent = taskText;
@@ -45,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Create a new button element for removing the task
         const removeBtn = document.createElement('button');
 
-        // Set its textContent to “Remove”, and give it a class name of ‘remove-btn’
+        // Set its textContent to “Remove”, and give it a class name of ‘remove-btn’.
         removeBtn.textContent = 'Remove';
         removeBtn.className = 'remove-btn';
 
