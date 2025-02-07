@@ -7,14 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTasks(); // Load tasks from Local Storage when the page loads
     
     // Add task when "Add Task" button is clicked
-    addButton.addEventListener('click', () => {
-        addTask(taskInput.value);
-    });
+    addButton.addEventListener('click', addTask);
     
     // Add task when "Enter" key is pressed in the input field
     taskInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
-            addTask(taskInput.value);
+            addTask();
         }
     });
     
@@ -25,10 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Function to add a new task
-    function addTask(taskText, save = true) {
+    function addTask(taskText = taskInput.value, save = true) {
         taskText = taskText.trim(); // Trim input
         if (taskText === "") {
             alert("Please enter a task.");
+            return;
+        }
+        
+        // Check if task already exists
+        const existingTasks = Array.from(taskList.children).map(li => li.firstChild.textContent);
+        if (existingTasks.includes(taskText)) {
+            alert("Task already exists.");
             return;
         }
     
