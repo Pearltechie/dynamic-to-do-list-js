@@ -1,88 +1,71 @@
 document.addEventListener('DOMContentLoaded', () => {
-    loadTasks(); // Load tasks from Local Storage when the page loads
-
+    // Select DOM Elements
     const addButton = document.getElementById('add-task-btn');
     const taskInput = document.getElementById('task-input');
     const taskList = document.getElementById('task-list');
-
-    // Attach Event Listeners:
-
-    // Add an event listener to addButton that calls addTask when the button is clicked
+    
+    loadTasks(); // Load tasks from Local Storage when the page loads
+    
+    // Add task when "Add Task" button is clicked
     addButton.addEventListener('click', () => {
-        addTask();
+        addTask(taskInput.value);
     });
-
-    // Add an event listener to taskInput for the ‘keypress’ event to allow tasks to be added by pressing the “Enter” key
+    
+    // Add task when "Enter" key is pressed in the input field
     taskInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
-            addTask();
+            addTask(taskInput.value);
         }
     });
-
+    
     // Function to load tasks from Local Storage and display them
     function loadTasks() {
         const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
         storedTasks.forEach(taskText => addTask(taskText, false)); // false indicates not to save to Local Storage
     }
-
-    // Create the addTask Function:
-
-    // Define a function named addTask. This function will be responsible for adding new tasks to the list.
-    function addTask(taskText = null, save = true) {
-        // Inside addTask, retrieve and trim the value from the task input field. Store this value in a variable named taskText.
-        if (taskText === null) {
-            taskText = taskInput.value.trim();
-        }
-
-        // Check if taskText is not empty (“”)
+    
+    // Function to add a new task
+    function addTask(taskText, save = true) {
+        taskText = taskText.trim(); // Trim input
         if (taskText === "") {
-            // If it is empty, use alert to prompt the user to enter a task.
             alert("Please enter a task.");
             return;
         }
-
-        // Task Creation and Removal:
-
-        // Within the addTask function, if taskText is not empty:
-        
-        // Create a new li element. Set its textContent to taskText.
+    
+        // Create new task element
         const li = document.createElement('li');
         li.textContent = taskText;
-
-        // Create a new button element for removing the task
+    
+        // Create remove button for the task
         const removeBtn = document.createElement('button');
-
-        // Set its textContent to “Remove”, and give it a class name of ‘remove-btn’.
         removeBtn.textContent = 'Remove';
         removeBtn.className = 'remove-btn';
-
-        // Assign an onclick event to the remove button that, when triggered, removes the li element from taskList.
         removeBtn.addEventListener('click', () => {
             removeTask(taskText, li);
         });
-
-        // Append the remove button to the li element
+    
+        // Append remove button to task
         li.appendChild(removeBtn);
-
-        // Append the li to taskList
+    
+        // Append task to task list
         taskList.appendChild(li);
-
+    
         // Save task to Local Storage if required
         if (save) {
             const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
             storedTasks.push(taskText);
             localStorage.setItem('tasks', JSON.stringify(storedTasks));
         }
-
-        // Clear the task input field by setting taskInput.value to an empty string
+    
+        // Clear the input field
         taskInput.value = '';
     }
-
+    
     // Function to remove a task
     function removeTask(taskText, taskElement) {
         // Remove task from the DOM
         taskList.removeChild(taskElement);
-
+    
         // Update the tasks array in Local Storage
         let storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
         storedTasks = storedTasks.filter(task => task !== taskText);
