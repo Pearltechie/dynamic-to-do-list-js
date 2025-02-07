@@ -5,17 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('task-input');
     const taskList = document.getElementById('task-list');
 
-    // Disable button if input is empty
-    taskInput.addEventListener('input', () => {
-        addButton.disabled = taskInput.value.trim() === "";
-    });
+    // Attach Event Listeners:
 
-    // Add task when "Add Task" button is clicked
+    // Add an event listener to addButton that calls addTask when the button is clicked
     addButton.addEventListener('click', () => {
         addTask(taskInput.value);
     });
 
-    // Add task when "Enter" key is pressed in the input field
+    // Add an event listener to taskInput for the ‘keypress’ event to allow tasks to be added by pressing the “Enter” key
     taskInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
             addTask(taskInput.value);
@@ -28,35 +25,39 @@ document.addEventListener('DOMContentLoaded', () => {
         storedTasks.forEach(taskText => addTask(taskText, false)); // false indicates not to save to Local Storage
     }
 
-    // Function to add a new task
+    // Create the addTask Function:
     function addTask(taskText, save = true) {
+        // Retrieve and trim the value from the task input field
         taskText = taskText.trim();
+
+        // Check if taskText is not empty (“”)
         if (taskText === "") {
             alert("Please enter a task.");
             return;
         }
 
-        if (taskExists(taskText)) {
-            alert("Task already exists.");
-            return;
-        }
+        // Task Creation and Removal:
 
-        // Create new task element
+        // Create a new li element. Set its textContent to taskText.
         const li = document.createElement('li');
         li.textContent = taskText;
 
-        // Create remove button for the task
+        // Create a new button element for removing the task
         const removeBtn = document.createElement('button');
+
+        // Set its textContent to “Remove”, and give it a class name of ‘remove-btn’
         removeBtn.textContent = 'Remove';
         removeBtn.className = 'remove-btn';
+
+        // Assign an onclick event to the remove button that, when triggered, removes the li element from taskList.
         removeBtn.addEventListener('click', () => {
             removeTask(taskText, li);
         });
 
-        // Append remove button to task
+        // Append the remove button to the li element
         li.appendChild(removeBtn);
 
-        // Append task to task list
+        // Append the li to taskList
         taskList.appendChild(li);
 
         // Save task to Local Storage if required
@@ -66,15 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('tasks', JSON.stringify(storedTasks));
         }
 
-        // Clear the input field and disable button
+        // Clear the task input field by setting taskInput.value to an empty string
         taskInput.value = '';
-        addButton.disabled = true;
-    }
-
-    // Function to check if task already exists
-    function taskExists(taskText) {
-        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-        return storedTasks.includes(taskText);
     }
 
     // Function to remove a task
