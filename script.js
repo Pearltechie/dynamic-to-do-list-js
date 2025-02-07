@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('task-input');
     const taskList = document.getElementById('task-list');
 
+    // Disable button if input is empty
+    taskInput.addEventListener('input', () => {
+        addButton.disabled = taskInput.value.trim() === "";
+    });
+
     // Add task when "Add Task" button is clicked
     addButton.addEventListener('click', () => {
         addTask(taskInput.value);
@@ -25,8 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to add a new task
     function addTask(taskText, save = true) {
-        if (taskText.trim() === "") {
+        taskText = taskText.trim();
+        if (taskText === "") {
             alert("Please enter a task.");
+            return;
+        }
+
+        if (taskExists(taskText)) {
+            alert("Task already exists.");
             return;
         }
 
@@ -55,8 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('tasks', JSON.stringify(storedTasks));
         }
 
-        // Clear the input field
+        // Clear the input field and disable button
         taskInput.value = '';
+        addButton.disabled = true;
+    }
+
+    // Function to check if task already exists
+    function taskExists(taskText) {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        return storedTasks.includes(taskText);
     }
 
     // Function to remove a task
