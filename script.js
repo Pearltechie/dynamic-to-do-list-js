@@ -23,8 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Function to add a new task
-    function addTask(taskText = taskInput.value, save = true) {
-        taskText = taskText.trim(); // Trim input
+    function addTask(taskText = "") {
+        if (!taskText) {
+            taskText = taskInput.value.trim(); // Explicitly trim input
+        }
+
         if (taskText === "") {
             alert("Please enter a task.");
             return;
@@ -55,12 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Append task to task list
         taskList.appendChild(li);
     
-        // Save task to Local Storage if required
-        if (save) {
-            const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-            storedTasks.push(taskText);
-            localStorage.setItem('tasks', JSON.stringify(storedTasks));
-        }
+        // Save task to Local Storage
+        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        storedTasks.push(taskText);
+        localStorage.setItem('tasks', JSON.stringify(storedTasks));
     
         // Clear the input field
         taskInput.value = '';
@@ -77,4 +78,3 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('tasks', JSON.stringify(storedTasks));
     }
 });
-
